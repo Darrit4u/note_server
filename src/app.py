@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from fastapi import FastAPI, Depends, HTTPException, Response, Request
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
+import requests
 
 from src.db import SUser, SNote
 from src.db import (
@@ -91,7 +92,7 @@ def authenticate_user(response: Response, username: str, password: str):
         raise HTTPException(status_code=400, detail="Incorrect username or password")
     jwt_token = create_jwt_token({"sub": user.id})
     response.set_cookie(key="users_access_token", value=jwt_token, httponly=True)
-    return {"access_token": jwt_token, "token_type": "bearer"}
+    return {"access_token": jwt_token, "refresh_token": None}
 
 
 @app.get("/user/note")
@@ -106,6 +107,14 @@ def get_user(id_user: int) -> SUser:
 
 @app.post("/note/add")
 def add_note(text: str, cur_user: SUser = Depends(get_current_user)) -> Dict[str, bool]:
+    response = requests.get(
+        "https://speller.yandex.net/services/spellservice.json/checkText",
+        params={"text": text},
+    )
+
+    if response.json():
+        raise HTTPException(status_code=418, detail=response.json())
+
     id_user = cur_user.id
     add_new_note(id_user=id_user, text=text)
     return {"Success": True}
@@ -115,5 +124,5 @@ def add_note(text: str, cur_user: SUser = Depends(get_current_user)) -> Dict[str
 def get_note_by_id(id_note: int, cur_user: SUser = Depends(get_current_user)) -> SNote:
     note_data = get_note_by_id_note(id_note)
     if cur_user.id != note_data.id_user:
-        raise HTTPException(status_code=400, detail="Incorrect user")
+        raise HTTPException(status_code=401, detail="You don't have access to this note")
     return note_data
