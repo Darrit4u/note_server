@@ -6,4 +6,4 @@ COPY ./src /code/src
 COPY ./users.json /code/users.json
 COPY ./notes.json /code/notes.json
 
-CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "80"]
