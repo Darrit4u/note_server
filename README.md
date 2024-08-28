@@ -37,3 +37,6 @@ uvicorn src.app:app --reload
 docker pull da44it/note_server:ver1.0
 docker run -p 80:80 da44it/note_server:ver1.0
 ```
+
+## Пример запросов
+[Коллекция запросов Postman](https://www.postman.com/darrit/workspace/public-workspace/collection/22089641-cb547b4d-2dc6-4bdd-89f7-a33ec7111b1b?action=share&creator=22089641)
