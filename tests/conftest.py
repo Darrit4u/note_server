@@ -28,7 +28,7 @@ def prepare_database():
             file,
         )
 
-    open("tests/test_db/notes.json", "a").close()
+    open("tests/test_db/notes.json", "w").close()
 
 
 @pytest.fixture(autouse=True, scope="session")

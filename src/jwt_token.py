@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import jwt
 
-SECRET_KEY = "my_secret_key"
+SECRET_KEY = "f8c27ae8e5b853b25f59eff3929b6ef57b7b3610f3f4fb1e990b27e42dc38422"
 ALGORITHM = "HS256"
 EXPIRATION_TIME = timedelta(days=30)
 
